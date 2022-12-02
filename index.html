@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>voice recogintion</title>
+</head>
+
+<body>
+    <h1>voice recognition</h1>
+    <button id="speech-btn" onclick="voice()">click to speech</button>
+    <br />
+    <textarea rows="5" cols="50" id="result"></textarea>
+
+    <script>
+        String.prototype.sliceReplace = function (start, end, repl) {
+            return this.substring(0, start) + repl + this.substring(end);
+        };
+
+        function voice() {
+            let recogintion = new webkitSpeechRecognition();
+            recogintion.lang = "cmn-Hant-TW";
+            recogintion.onresult = function (event) {
+                console.log(event);
+                let resultEle = document.getElementById("result");
+                let start = resultEle.selectionStart;
+                let end = resultEle.selectionEnd;
+                let curTxt = resultEle.value;
+
+                document.getElementById("result").value =
+                    curTxt.sliceReplace(start, end, event.results[0][0].transcript);
+            }
+            recogintion.start();
+            recogintion.onstart = function () {
+                document.getElementById("speech-btn").innerHTML = 'recording'
+            }
+            recogintion.onend = function () {
+                document.getElementById("speech-btn").innerHTML = 'click to speech'
+            }
+        }
+    </script>
+
+</body>
+
+</html>
